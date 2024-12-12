@@ -15,7 +15,6 @@ def get_weather(city: str, api_key: str):
     Возвращаеn dict словарь с данными о погоде.
     """
     url = fr'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru' # Сформировали URL для запроса
-    global weather_dict # Объявили переменную как глобальную
     response = requests.get(url) # Сделали запрос и получили объект ответа
     print(response.status_code) # Получили статус ответа
     weather_dict = response.json() # Получили JSON из объекта ответа
@@ -27,7 +26,7 @@ def format_weather_message(weather_dict: dict):
     Аргументы weather_dict: Словарь с данными о погоде.
     Возвращает str форматированное сообщение о погоде.
     """
-    global message, temp, feels_like, description
+    global temp, feels_like, description
     temp = round(weather_dict['main']['temp']) # температура
     feels_like = round(weather_dict['main']['feels_like']) # Ощущается как
     description = weather_dict['weather'][0]['description'] # Описание погоды
@@ -58,8 +57,7 @@ def main():
     """
     Фукция запускает программу, выполняет вызовы вышеуказанных функций и обрабатывает вывод.
     """
-    get_weather(CITY, API_KEY) 
-    format_weather_message(weather_dict)
-    notify_weather(message)
-
-main()
+    notify_weather(format_weather_message(get_weather(CITY, API_KEY)))
+    
+if __name__ == '__main__':
+    main()

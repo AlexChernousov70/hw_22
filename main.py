@@ -5,8 +5,6 @@ from plyer import notification
 # константы 
 API_KEY = "23496c2a58b99648af590ee8a29c5348"
 CITY = "Москва"
-weather_dict = {}
-message = ''
 
 def get_weather(city: str, api_key: str):
     """
@@ -17,23 +15,31 @@ def get_weather(city: str, api_key: str):
     Возвращаеn dict словарь с данными о погоде.
     """
     url = fr'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric&lang=ru' # Сформировали URL для запроса
+    global weather_dict # Объявили переменную как глобальную
     response = requests.get(url) # Сделали запрос и получили объект ответа
     print(response.status_code) # Получили статус ответа
     weather_dict = response.json() # Получили JSON из объекта ответа
-    return print(weather_dict)  # Получили объект Python из JSON
+    return weather_dict # Получили объект Python из JSON
     
 get_weather(CITY, API_KEY)
 
-
 def format_weather_message(weather_dict: dict):
-    pass
     """
     Функция форматирует данные о погоде в удобочитаемое сообщение.
     Аргументы weather_dict: Словарь с данными о погоде.
     Возвращает str форматированное сообщение о погоде.
     """
-    # return str
+    temp = round(weather_dict['main']['temp'])
+    # Ощущается как
+    feels_like = round(weather_dict['main']['feels_like'])
+    # Описание погоды
+    description = weather_dict['weather'][0]['description']
+    # форматируем сообщение
+    message = 'Температура: {temp}°C\nОщущается как: {feels_like}°C\nОписание: {description}'
+    # возвращаем сообщение
+    return message
 
+format_weather_message(weather_dict)
 
 def notify_weather(message: str):
     pass
@@ -44,7 +50,6 @@ def notify_weather(message: str):
     """
     # return None
 
-
 def main():
     pass
     """
@@ -53,5 +58,3 @@ def main():
     get_weather(CITY, API_KEY)
     format_weather_message(weather_dict)
     notify_weather(message)
-
-# main()
